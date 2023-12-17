@@ -156,3 +156,60 @@ the MediaPipe Stack Overflow with a `mediapipe` tag.
 ### Videos
 
 *   [YouTube Channel](https://www.youtube.com/c/MediaPipe)
+
+Following : https://developers.google.com/mediapipe/framework/getting_started/install#installing_on_macos
+
+(cd "/opt/homebrew/Cellar/bazel/6.4.0/libexec/bin" && curl -fLO https://releases.bazel.build/6.1.1/release/bazel-6.1.1-darwin-arm64 && chmod +x bazel-6.1.1-darwin-arm64)
+
+export BAZEL_NO_APPLE_CPP_TOOLCHAIN=1
+
+export GLOG_logtostderr=1
+
+## Apple silicon
+
+dyld[10936]: symbol not found in flat namespace '_CFRelease'
+zsh: abort      bazel run --define MEDIAPIPE_DISABLE_GPU=1 
+
+I can fix this with the change like below. Not sure any other missed changes as this error appear when I compile some other modules.
+
+source: https://github.com/google/mediapipe/issues/3397
+```
+/mediapipe/framework/port/BUILD b/mediapipe/framework/port/BUILD
+
+cc_library(
+    name = "status",
+    hdrs = [
+        "canonical_errors.h",
+        "status.h",
+        "status_builder.h",
+        "status_macros.h",
+    ],
+    deps = [
+        ":source_location",
+        "//mediapipe/framework:port",
+        "//mediapipe/framework/deps:status",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings",
+    ],
+    linkopts = select({
+        "//mediapipe:macos": [
+        "-framework CoreFoundation"
+    ],
+    "//conditions:default": []
+    })
+)
+```
+
+Select correct bazel version and path.
+
+```text
+Navigate to "File" -> "Project Structure."
+
+In the "Project Structure" dialog, select "Project" on the left sidebar.
+
+Look for the "Bazel" section. Here, you should see a field for "Bazel executable." Verify that the path matches the custom path you mentioned (/Users/shahbajhussain/.bazel/bin/bazel).
+
+If the path is different or empty, you can click the "..." button next to the field to browse and select the correct Bazel executable.
+
+Click "OK" to save the changes.
+```
