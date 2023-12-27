@@ -167,6 +167,38 @@ export GLOG_logtostderr=1
 
 ## Apple silicon
 
+Download and install python 3.7.9 manually
+brew install opencv@3
+
+ex: path /opt/homebrew/opt/opencv@3 and /opt/homebrew/opt/ffmpeg
+or
+/usr/local/Cellar/opt/opencv@3 and /usr/local/Cellar/opt/ffmpeg
+
+If can't find opencv path: https://github.com/google/mediapipe/issues/666
+Edit path in WORKSPACE, opencv_macos.BUILD, ffmpeg_macos.BUILD
+
+```shell
+new_local_repository(
+    name = "macos_opencv",
+    build_file = "@//third_party:opencv_macos.BUILD",
+    # For local MacOS builds, the path should point to an opencv@3 installation.
+    # If you edit the path here, you will also need to update the corresponding
+    # prefix in "opencv_macos.BUILD".
+    # path = "/usr/local",  # e.g. /usr/local/Cellar for HomeBrew
+    path = "/opt/homebrew/",
+)
+new_local_repository(
+    name = "macos_ffmpeg",
+    build_file = "@//third_party:ffmpeg_macos.BUILD",
+    # path = "/usr/local/opt/ffmpeg",
+    path = "/opt/homebrew/opt/ffmpeg"
+)
+```
+
+bazel clean
+bazel shutdown
+for changes to take effect.
+
 dyld[10936]: symbol not found in flat namespace '_CFRelease'
 zsh: abort      bazel run --define MEDIAPIPE_DISABLE_GPU=1 
 

@@ -6,10 +6,12 @@
 #include "mediapipe/framework/port/parse_text_proto.h"
 #include "mediapipe/framework/port/status.h"
 
+using namespace mediapipe;
+
 // Running all mediapipe stuff inside a functions which returns mediapipe::Status
 // is convenient, as you can use MP macroses like MP_RETURN_IF_ERROR
 // mediapipe::Status is absl::Status from abseil under the hood
-mediapipe::Status run() {
+Status run() {
     using namespace std;
     // First, we have to create MP graph as protobuf text format
     // Here we run stuff through 2 copies of PassThroughCalculator, which
@@ -31,14 +33,14 @@ mediapipe::Status run() {
 
     // Next parse this string into a protobuf CalculatorGraphConfig object
     // Note that ParseTextProtoOrDie crashes program on error
-    mediapipe::CalculatorGraphConfig config = mediapipe::ParseTextProtoOrDie<mediapipe::CalculatorGraphConfig>(protoG);
+    CalculatorGraphConfig config = ParseTextProtoOrDie<CalculatorGraphConfig>(protoG);
     // Create MP Graph and Initialize it with config
-    mediapipe::CalculatorGraph graph;
+    CalculatorGraph graph;
     MP_RETURN_IF_ERROR(graph.Initialize(config));
     // This macros returns the status if not OK
     // It is roughly equivalent to
     // {
-    //      mediapipe::Status status =  graph.Initialize(config);
+    //      Status status =  graph.Initialize(config);
     //      if (! sttaus.ok()) return status;
     // }
 
@@ -46,7 +48,7 @@ mediapipe::Status run() {
     // Google example uses poller (synchronous logic)
     // I prefer observer (a callback, asynchronous logic)
     // Let's define our callback
-    auto cb = [](const mediapipe::Packet &packet)->mediapipe::Status{
+    auto cb = [](const Packet &packet)->Status{
         // packet.Get<double>() extracts double number from a packet
         // Get() Exits program if the packet is not double
         // If you want to play it safe, check each packet with methods like
@@ -55,7 +57,7 @@ mediapipe::Status run() {
         // We also print the timestamp
         cout << packet.Timestamp() << ": RECEIVED PACKET " << packet.Get<double>() << endl;
         // It is vital to always return OK status, unless you want to stop the graph execution
-        return mediapipe::OkStatus();
+        return OkStatus();
     };
 
     // Attach this callback as observer to the graph output stream out
@@ -69,9 +71,9 @@ mediapipe::Status run() {
         // Each packet must have a timestamp
         // MP timestamp must go in strictly ascending order
         // They don't have to be true "timestamps since epoch"
-        mediapipe::Timestamp ts(i);
+        Timestamp ts(i);
         // mediapipe::MakePacket creates a packet (copies or moves data), use mediapipe::Adapt() instead to avoid copy/move
-        mediapipe::Packet packet = mediapipe::MakePacket<double>(i*0.1).At(ts);
+        Packet packet = MakePacket<double>(i*0.1).At(ts);
         // Send this packet to the stream in
         MP_RETURN_IF_ERROR(graph.AddPacketToInputStream("in", packet));
     }
@@ -82,7 +84,7 @@ mediapipe::Status run() {
     // Wait for the graph to finish, joins any threads created for this graph
     MP_RETURN_IF_ERROR(graph.WaitUntilDone());
     // If we got this far, we are doing fine
-    return mediapipe::OkStatus();
+    return OkStatus();
     // These two lines can be replaced by (in simplest cases only, thus I avoid this syntax)
     // return graph.WaitUntilDone();
 }
@@ -92,7 +94,7 @@ int main() {
     using namespace std;
     cout << "Example 1.1 : Simplest mediapipe pipeline ..." << endl;
     // Call run(), which return a status
-    mediapipe::Status status = run();
+    Status status = run();
     cout << "status = " << status << endl;
     cout << "status.ok() = " << status.ok() << endl;
     return 0;
