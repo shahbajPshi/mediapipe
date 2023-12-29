@@ -1115,12 +1115,6 @@ def external_files():
     )
 
     http_file(
-        name = "com_google_mediapipe_pose_detection_tflite",
-        sha256 = "9ba9dd3d42efaaba86b4ff0122b06f29c4122e756b329d89dca1e297fd8f866c",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/pose_detection.tflite?generation=1678737489600422"],
-    )
-
-    http_file(
         name = "com_google_mediapipe_pose_expected_detection_pbtxt",
         sha256 = "16866c8dd4fbee60f6972630d73baed219b45824c055c7fbc7dc9a91c4b182cc",
         urls = ["https://storage.googleapis.com/mediapipe-assets/pose_expected_detection.pbtxt?generation=1681244244235448"],
@@ -1142,24 +1136,6 @@ def external_files():
         name = "com_google_mediapipe_pose_landmarker_task",
         sha256 = "fb9cc326c88fc2a4d9a6d355c28520d5deacfbaa375b56243b0141b546080596",
         urls = ["https://storage.googleapis.com/mediapipe-assets/pose_landmarker.task?generation=1681244249587900"],
-    )
-
-    http_file(
-        name = "com_google_mediapipe_pose_landmark_full_tflite",
-        sha256 = "e9a5c5cb17f736fafd4c2ec1da3b3d331d6edbe8a0d32395855aeb2cdfd64b9f",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/pose_landmark_full.tflite?generation=1661875894245786"],
-    )
-
-    http_file(
-        name = "com_google_mediapipe_pose_landmark_heavy_tflite",
-        sha256 = "59e42d71bcd44cbdbabc419f0ff76686595fd265419566bd4009ef703ea8e1fe",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/pose_landmark_heavy.tflite?generation=1661875897944151"],
-    )
-
-    http_file(
-        name = "com_google_mediapipe_pose_landmark_lite_tflite",
-        sha256 = "1150dc68a713b80660b90ef46ce4e85c1c781bb88b6e3512cc64e6a685ba5588",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/pose_landmark_lite.tflite?generation=1681244252454799"],
     )
 
     http_file(
