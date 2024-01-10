@@ -185,7 +185,7 @@ class GeneratePyProtos(build_ext.build_ext):
     # indexable.
     proto_dirs = ['mediapipe/calculators'] + [
         x[0] for x in os.walk('mediapipe/modules')
-    ] + [x[0] for x in os.walk('mediapipe/tasks/cc')]
+    ] + [x[0] for x in os.walk('pshi/tasks/cc')]
     for proto_dir in proto_dirs:
       self._add_empty_init_file(
           os.path.abspath(
